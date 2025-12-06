@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Countdown Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+       background-color: black;
+    
+    color: cyan;
+    }
+    #display {
+      font-size: 2rem;
+      margin-top: 15px;
+    }
+   
+  </style>
+</head>
+<body>
+
+  <h2>Countdown Timer</h2>
+
+  <label>Enter seconds:</label>
+  <input type="number" id="secondsInput" min="1" />
+
+  <button id="startBtn" style="color: cyan;">Start
+
+  </button>
+
+  <div id="display"></div>
+
+  <audio id="beep">
+    <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+  </audio>
+
+<script>
+  const startBtn = document.getElementById("startBtn");
+  const display = document.getElementById("display");
+  const beep = document.getElementById("beep");
+
+  startBtn.addEventListener("click", async () => {
+    const total = parseInt(document.getElementById("secondsInput").value);
+
+    if (!total || total <= 0) {
+      alert("Enter valid seconds");
+      return;
+    }
+
+    // Ask permission for notifications
+    if (Notification.permission !== "granted") {
+      await Notification.requestPermission();
+    }
+
+    let remaining = total;
+    display.textContent = remaining + " sec";
+
+    const timer = setInterval(() => {
+      remaining--;
+      display.textContent = remaining + " sec";
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        if (Notification.permission === "granted") {
+          new Notification("⏰ Timer finished!");
+        }
+        beep.play();
+
+        display.textContent = "Done!";
+      }
+    }, 1000);
+  });
+</script>
+
+</body>
+</html>
